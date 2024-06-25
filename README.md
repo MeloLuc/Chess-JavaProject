@@ -1,1 +1,1 @@
-# Chess-JavaProject-Study
+# Chess-JavaProject
