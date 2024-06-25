@@ -6,6 +6,9 @@ public class Position {
     private int column;
     
     public Position(int row, int column) {
+        if(row < 0 || row >= 8 || column < 0 || column >= 8) {
+            throw new BoardException("error instantiating Position board");
+        }
         this.row = row;
         this.column = column;
     }
@@ -18,7 +21,8 @@ public class Position {
         return column;
     }
 
-    public String toString() {
-        return this.row + ", " + this.column;
+    public String toString(){
+        return row + ", " + column;
     }
+    
 }
