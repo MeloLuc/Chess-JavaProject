@@ -1,0 +1,126 @@
+package chess.pieces;
+
+import boardgame.Board;
+import boardgame.Position;
+import chess.ChessPiece;
+import chess.Color;
+
+public class Queen extends ChessPiece {
+    
+    public Queen(Board board, Color color) {
+        super(board, color);
+    }
+    
+    @Override
+    public String toString() {
+        return "Q";
+    }
+
+    @Override
+    public boolean[][] possibleMoves() { //ROOK + BISHOP
+        
+        boolean[][] mat = new boolean[getBoard().getRows()][getBoard().getColumns()];
+        Position p = new Position(0, 0);
+
+        //ROOK
+        // above
+        p.setValues(this.position.getRow()-1, this.position.getColumn());
+
+        while(getBoard().positionExists(p) && !getBoard().thereIsAPiece(p)){
+            mat[p.getRow()][p.getColumn()] = true;
+            p.setValues(p.getRow()-1, p.getColumn());
+        }
+
+        if(getBoard().positionExists(p) && isThereOpponentPiece(p)) {
+            mat[p.getRow()][p.getColumn()] = true;
+        }
+
+        // below
+        p.setValues(this.position.getRow()+1, this.position.getColumn());
+
+        while(getBoard().positionExists(p) && !getBoard().thereIsAPiece(p)){
+            mat[p.getRow()][p.getColumn()] = true;
+            p.setValues(p.getRow()+1, p.getColumn());
+        }
+
+        if(getBoard().positionExists(p) && isThereOpponentPiece(p)) {
+            mat[p.getRow()][p.getColumn()] = true;
+        }
+        
+        // right
+        p.setValues(this.position.getRow(), this.position.getColumn()+1);
+
+        while(getBoard().positionExists(p) && !getBoard().thereIsAPiece(p)){
+            mat[p.getRow()][p.getColumn()] = true;
+            p.setValues(p.getRow(), p.getColumn()+1);
+        }
+
+        if(getBoard().positionExists(p) && isThereOpponentPiece(p)) {
+            mat[p.getRow()][p.getColumn()] = true;
+        }
+
+        // left
+        p.setValues(this.position.getRow(), this.position.getColumn()-1);
+
+        while(getBoard().positionExists(p) && !getBoard().thereIsAPiece(p)){
+            mat[p.getRow()][p.getColumn()] = true;
+            p.setValues(p.getRow(), p.getColumn()-1);
+        }
+
+        if(getBoard().positionExists(p) && isThereOpponentPiece(p)) {
+            mat[p.getRow()][p.getColumn()] = true;
+        }
+
+        //BISHOP
+        // northwest
+        p.setValues(this.position.getRow()-1, this.position.getColumn()-1);
+
+        while(getBoard().positionExists(p) && !getBoard().thereIsAPiece(p)){
+            mat[p.getRow()][p.getColumn()] = true;
+            p.setValues(p.getRow()-1, p.getColumn()-1);
+        }
+
+        if(getBoard().positionExists(p) && isThereOpponentPiece(p)) {
+            mat[p.getRow()][p.getColumn()] = true;
+        }
+
+        // northeast
+        p.setValues(this.position.getRow()-1, this.position.getColumn()+1);
+
+        while(getBoard().positionExists(p) && !getBoard().thereIsAPiece(p)){
+            mat[p.getRow()][p.getColumn()] = true;
+            p.setValues(p.getRow()-1, p.getColumn()+1);
+        }
+
+        if(getBoard().positionExists(p) && isThereOpponentPiece(p)) {
+            mat[p.getRow()][p.getColumn()] = true;
+        }
+        
+        // southeast
+        p.setValues(this.position.getRow()+1, this.position.getColumn()+1);
+
+        while(getBoard().positionExists(p) && !getBoard().thereIsAPiece(p)){
+            mat[p.getRow()][p.getColumn()] = true;
+            p.setValues(p.getRow()+1, p.getColumn()+1);
+        }
+
+        if(getBoard().positionExists(p) && isThereOpponentPiece(p)) {
+            mat[p.getRow()][p.getColumn()] = true;
+        }
+
+        // southwest
+        p.setValues(this.position.getRow()+1, this.position.getColumn()-1);
+
+        while(getBoard().positionExists(p) && !getBoard().thereIsAPiece(p)){
+            mat[p.getRow()][p.getColumn()] = true;
+            p.setValues(p.getRow()+1, p.getColumn()-1);
+        }
+
+        if(getBoard().positionExists(p) && isThereOpponentPiece(p)) {
+            mat[p.getRow()][p.getColumn()] = true;
+        }
+
+        return mat;
+    }
+}
+
