@@ -70,10 +70,39 @@ public class King extends ChessPiece{
         if(getBoard().positionExists(p) && canMove(p)){
             mat[p.getRow()][p.getColumn()] = true;
         }
+
+
+        //special move castling
+        if(this.getMoveCount() == 0 && !cheesMatch.getCheck()){
+            //kingside
+            Position posR1 = new Position(this.position.getRow(), this.position.getColumn()+3);
+            if(testRookCastling(posR1)){
+                Position p1 = new Position(this.position.getRow(), this.position.getColumn()+1);
+                Position p2 = new Position(this.position.getRow(), this.position.getColumn()+2); 
+                if(getBoard().piece(p1) == null && getBoard().piece(p2) == null) {
+                    mat[this.position.getRow()][this.position.getColumn()+2] = true;
+                }
+            } 
+            //queenside
+            Position posR2 = new Position(this.position.getRow(), this.position.getColumn()-4);
+            if(testRookCastling(posR2)){
+                Position p1 = new Position(this.position.getRow(), this.position.getColumn()-1);
+                Position p2 = new Position(this.position.getRow(), this.position.getColumn()-2); 
+                Position p3 = new Position(this.position.getRow(), this.position.getColumn()-1);
+                
+                if(getBoard().piece(p1) == null && getBoard().piece(p2) == null && getBoard().piece(p3) == null) {
+                    mat[this.position.getRow()][this.position.getColumn()-2] = true;
+                }
+            } 
+        }
+
         return mat;
     }
+        
+    
 
-    /*private boolean testRookCastling(Position position) {
+    private boolean testRookCastling(Position position) {
         ChessPiece p = (ChessPiece)getBoard().piece(position);
-    }*/
+        return p != null && p instanceof Rook && p.getColor() == this.getColor() && p.getMoveCount() == 0;
+    }
 }
