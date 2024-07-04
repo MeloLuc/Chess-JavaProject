@@ -52,7 +52,7 @@ public class Pawn extends ChessPiece {
             }
 
             // special move en passant white
-            if (this.position.getRow() == 3) {
+            if (this.position.getRow() == 3 && this.position.getColumn()-1 >= 0 && this.position.getColumn()+1 <= 7) {
                 Position left = new Position(this.position.getRow(), this.position.getColumn() - 1);
                 if (getBoard().positionExists(left) && isThereOpponentPiece(left)
                         && getBoard().piece(left) == chessMatch.getEnPassantVulnerable()) {
@@ -94,7 +94,7 @@ public class Pawn extends ChessPiece {
             }
 
             // special move en passant black
-            if (this.position.getRow() == 4) {
+            if (this.position.getRow() == 4 && this.position.getColumn()-1 >= 0 && this.position.getColumn()+1 <= 7) {
                 Position left = new Position(this.position.getRow(), this.position.getColumn() - 1);
                 if (getBoard().positionExists(left) && isThereOpponentPiece(left)
                         && getBoard().piece(left) == chessMatch.getEnPassantVulnerable()) {

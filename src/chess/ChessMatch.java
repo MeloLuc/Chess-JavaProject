@@ -22,6 +22,7 @@ public class ChessMatch {
     private boolean check;
     private boolean checkMate;
     private ChessPiece enPassantVulnerable;
+    private ChessPiece promoted;
     private List<Piece> piecesOnTheBoard = new ArrayList<>();
     private List<Piece> capturedPieces = new ArrayList<>();
 
@@ -56,6 +57,10 @@ public class ChessMatch {
         return this.enPassantVulnerable;
     }
 
+    public ChessPiece getPromoted() {
+        return this.promoted;
+    }
+
     // returns an array[][] of pieces from my chess game- downcasting Piece -
     // ChessPiece
     public ChessPiece[][] getPieces() {
@@ -84,6 +89,15 @@ public class ChessMatch {
 
         ChessPiece movedPiece = (ChessPiece) board.piece(target);
 
+        //specialmove promotion
+        promoted = null;
+        if(movedPiece instanceof Pawn) {
+            if((movedPiece.getColor() == Color.WHITE && target.getRow() == 0) || (movedPiece.getColor() == Color.BLACK && target.getRow() == 7)) {
+                promoted = movedPiece;
+                promoted = replacePromotedPiece("Q");
+            }
+        }
+
         check = (testCheck(opponent(currentPlayer)));
 
         if(testCheckMate(opponent(currentPlayer))) {
@@ -102,6 +116,32 @@ public class ChessMatch {
         }
         
         return (ChessPiece) capturedPiece;
+    }
+
+    public ChessPiece replacePromotedPiece(String type) {
+        if(promoted == null) {
+            throw new IllegalStateException("There is no piece to be promoted.");
+        }
+        if(!type.equals("Q") && !type.equals("R") && !type.equals("N") && !type.equals("B")){
+            return promoted;
+        }
+
+        Position pos = promoted.getChessPosition().toPosition();
+        Piece p = board.removePiece(pos);
+        piecesOnTheBoard.remove(p);
+
+        ChessPiece newPiece = newPiecePromoted(type, promoted.getColor());
+        board.placePiece(newPiece, pos);
+        piecesOnTheBoard.add(newPiece);
+
+        return newPiece;
+    }
+
+    private ChessPiece newPiecePromoted (String type, Color color) {
+        if(type.equals("B")) return new Bishop(board, color);
+        if(type.equals("Q")) return new Queen(board, color);
+        if(type.equals("N")) return new Knight(board, color);
+        return new Rook(board, color);
     }
 
     private Piece makeMove(Position source, Position target) {
@@ -130,6 +170,22 @@ public class ChessMatch {
             ChessPiece rook = (ChessPiece)board.removePiece(sourceRook);
             board.placePiece(rook, targetRook);
             rook.increaseMoveCount();
+        }
+
+        // specialmove en passant
+        if(p instanceof Pawn) {
+            if(source.getColumn() != target.getColumn() && capturedPiece == null) {
+                Position pawPosition;
+                if(p.getColor() == Color.WHITE){
+                    pawPosition = new Position(target.getRow()+1, target.getColumn());
+                }
+                else {
+                    pawPosition = new Position(target.getRow()-1, target.getColumn());
+                }
+                capturedPiece = board.removePiece(pawPosition);
+                capturedPieces.add(capturedPiece);
+                piecesOnTheBoard.remove(capturedPiece);
+            }
         }
 
         return capturedPiece;
@@ -162,6 +218,21 @@ public class ChessMatch {
             ChessPiece rook = (ChessPiece)board.removePiece(targetRook);
             board.placePiece(rook, sourceRook);
             rook.decreaseMoveCount();
+        }
+
+        if(p instanceof Pawn) {
+
+            ChessPiece pawn = (ChessPiece) board.piece(target);
+            if(source.getColumn() != target.getColumn() && captured == enPassantVulnerable) {
+                Position pawPosition;
+                if(p.getColor() == Color.WHITE){
+                    pawPosition = new Position(3, target.getColumn());
+                }
+                else {
+                    pawPosition = new Position(4, target.getColumn());
+                }
+                board.placePiece(pawn, pawPosition);
+            }
         }
 
     }
